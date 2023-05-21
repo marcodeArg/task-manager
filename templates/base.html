@@ -11,6 +11,11 @@
 <body>
   {% include './partials/nav.html' %}
 
+  {% if messages %}
+    {% for message in messages %}
+      {{ message }}
+    {% endfor %}
+  {% endif %}
   
   {% block content %}
   {% endblock  %}
