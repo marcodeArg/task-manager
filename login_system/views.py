@@ -7,6 +7,9 @@ from .forms import CustomUserCreationForm, SignInForm
 
 # Create your views here.
 def signup(request):
+    if request.user.is_authenticated:
+        return redirect("home")
+
     form = CustomUserCreationForm()
 
     if request.method == "POST":
@@ -14,7 +17,7 @@ def signup(request):
         if form.is_valid():
             form.save()
             username = form.cleaned_data["username"]
-            password = form.cleaned_data["password"]
+            password = form.cleaned_data["password1"]
 
             user = authenticate(username=username, password=password)
             login(request, user)
@@ -26,28 +29,29 @@ def signup(request):
 
 
 def signin(request):
+    if request.user.is_authenticated:
+        return redirect("home")
+
     form = SignInForm()
 
     if request.method == "POST":
         form = SignInForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data["username"]
-            password = form.cleaned_data["password"]
+            password = form.cleaned_data["password1"]
 
             user = authenticate(username=username, password=password)
+            # Credentials were already checked in the form, so this is unnecessary, but whatever
             if user is not None:
                 login(request, user)
                 messages.success(request, "Login successful")
                 return redirect("home")
-            else:
-                messages.error(request, "Invalid username or password")
-                return redirect("signin")
 
     return render(request, "signin.html", {"form": form})
 
 
 @login_required
-def logout(request):
+def signout(request):
     logout(request)
     messages.success(request, "Logged out successfully")
     return redirect("home")
