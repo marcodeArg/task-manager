@@ -52,4 +52,4 @@ class SignInForm(forms.Form):
                 )
         else:
             raise forms.ValidationError({"username": "Username does not exist"})
-        return username
+        return cleaned_data
