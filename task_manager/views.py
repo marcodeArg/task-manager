@@ -1,7 +1,5 @@
-from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
 
 
-@login_required
-def home(request):
-    return HttpResponse("HOME")
+def root(request):
+    return redirect("home")
