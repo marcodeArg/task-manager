@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class TasksRoom(models.Model):
     id_room = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
-    title = models.CharField(blank=False)
+    title = models.CharField(blank=False, max_length=255)
     description = models.TextField(blank=True, max_length=500)
     users = models.ManyToManyField(User, related_name="rooms")
 
@@ -27,11 +27,15 @@ class Task(models.Model):
         ("COMP", "Completed"),
     )
 
-    title = models.CharField(blank=False)
+    title = models.CharField(blank=False, max_length=255)
     description = models.TextField(blank=True, max_length=500)
     room = models.ForeignKey(TasksRoom, on_delete=models.CASCADE)
-    importance = models.CharField(choices=IMPORTANCE_CHOICES, default="", blank=True)
-    current_state = models.CharField(choices=CURRENT_STATE, default="PEND", blank=True)
+    importance = models.CharField(
+        choices=IMPORTANCE_CHOICES, default="", blank=True, max_length=10
+    )
+    current_state = models.CharField(
+        choices=CURRENT_STATE, default="PEND", blank=True, max_length=10
+    )
 
     def __str__(self):
         return f"{self.title} | {self.room}"
