@@ -32,10 +32,10 @@
           <div class="modal-body">
 
             <!-- FORM --> 
-            <form action="" method="POST">
+            <form action="{% url 'home' %}" method="POST">
               {% csrf_token %}
               {{ formRoom }}
-              
+
               <div class="modal-footer">
                 <input type="submit" name="create" value="Create" class="btn btn-primary">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -58,12 +58,13 @@
           <div class="modal-body">
 
             <!-- FORM --> 
-            <form action="" method="POST">
+            <form action="{% url 'home' %}" method="POST">
+              {% csrf_token %}
               <label for="room" class="form-label">Enter the room key</label>
 
               <!-- IMPUT + SHOW/HIDE ICON --> 
               <div class="input-group">
-                <input ID="txtPassword" type="Password" Class="form-control">
+                <input ID="txtPassword" type="Password" Class="form-control" name="room_hash">
                 <div class="input-group-append">
                       <button id="show_password" class="btn btn-primary" type="button" onclick="mostrarPassword()"> <span class="fa fa-eye-slash icon"></span> </button>
                 </div>
@@ -81,34 +82,23 @@
     </div>
   </div>
 
-
-
-  <div class="row">
-    <div class="card col me-1 mb-1">
-      <div class="card-body">
-        <h5 class="card-title">Special title treatment</h5>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
+  
+  {% if rooms|length == 0 %}
+  <h3 class="display-2 text-center fw-light align-middle text-secondary justify-content-center">EMPTY</h3>
+  {% else %}
+  <div class="container d-flex flex-wrap">
+    {% for room in rooms %}
+      <div class="card flex-fill me-1 mb-1" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">{{room.title}}</h5>
+          <p class="card-text">{{room.description}}</p>
+          <a href="{% url 'room' room.id_room %}" class="btn btn-primary">Enter</a>
+        </div>
       </div>
-    </div>
-
-    <div class="card col">
-      <div class="card-body">
-        <h5 class="card-title">Special title treatment</h5>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
-    </div>
-
-    <div class="card col">
-      <div class="card-body">
-        <h5 class="card-title">Special title treatment</h5>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
-    </div>
-  </div>  
-
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
 
 <script type="text/javascript">
 function mostrarPassword(){
