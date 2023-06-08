@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="row align-items-center mb-3">
+      <h1 class="display-2 col">{{ room_title }}</h1>
+    
+      <div class="col d-flex justify-content-end"> 
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#users">
+          Users
+        </button>
+  
+  
+        <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#create_task">
+          Create Task
+        </button>
+      </div>
+  
+      <!-- MODAL USERS -->
+      <div class="modal fade" id="users" tabindex="-1" aria-labelledby="users" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="users">Users authorized in this room</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+  
+              {% for user in users %}
+                {{ user }}
+              {% endfor %}
+  
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- MODAL CREATE TASK -->
+      <div class="modal fade" id="create_task" tabindex="-1" aria-labelledby="create_task" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="create_task">Create Task</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+  
+              <!-- FORM --> 
+              <form action="{% url 'room' hash %}" method="POST">
+                {% csrf_token %}
+                <label for="room" class="form-label">Title</label>
+                <input type="text" name="title" class="form-control" id="title" required>
+                
+                <label for="desc" class="form-label">Description</label>
+                <textarea name="description" class="form-control" id="desc" cols="80" rows="5"></textarea>
+
+                <label for="importance" class="form-label">Importance</label>
+                <select name="importance" class="form-select" id="importance">
+                  <option selected></option>
+                  <option value="HIG">High</option>
+                  <option value="MED">Medium</option>
+                  <option value="LOW">Low</option>
+                </select>
+  
+                <div class="modal-footer">
+                  <input type="submit" class="btn btn-primary">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </form>
+  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      
+      <div class="row align-items-start text-center text-light">
+        <!-- TO-DO TITLE  -->
+        <div class="col me-4 bg-secondary rounded-1">
+          TO-DO
+
+          <!-- TO-DO TASKS -->
+          <div class="w-auto">
+            
+          </div>
+        </div>
+        <!-- DOING TITLE -->
+        <div class="col me-4 bg-secondary rounded-1">
+          In Progress
+          <!-- DOING TASKS -->
+          <div class="w-auto">
+            
+          </div>
+        </div>
+        <!-- DONE TITLE -->
+        <div class="col bg-secondary rounded-1">
+          Done
+
+          <!-- DONE TASKS -->
+          <div class="w-auto">
+            
+          </div>
+        </div>
+      </div>
+    
+
+
+  </div>
+
+
+{% endblock  %}
+  

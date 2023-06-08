@@ -3,11 +3,8 @@
 
 
 {% block content %}
-
-
-
 <div class="container mt-5">
-  <div class="row align-items-center">
+  <div class="row align-items-center mb-3">
     <h1 class="display-2 col">Hi, {{ user.username }}</h1>
   
     <div class="col d-flex justify-content-end"> 
@@ -86,12 +83,12 @@
   {% if rooms|length == 0 %}
   <h3 class="display-2 text-center fw-light align-middle text-secondary justify-content-center">EMPTY</h3>
   {% else %}
-  <div class="container d-flex flex-wrap">
+  <div class="d-flex flex-wrap">
     {% for room in rooms %}
       <div class="card flex-fill me-1 mb-1" style="width: 18rem;">
         <div class="card-body">
           <h5 class="card-title">{{room.title}}</h5>
-          <p class="card-text">{{room.description}}</p>
+          <p class="card-text">{{room.description|default:"ㅤ"}}</p>
           <a href="{% url 'room' room.id_room %}" class="btn btn-primary">Enter</a>
         </div>
       </div>

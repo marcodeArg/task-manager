@@ -1,14 +1,12 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .forms import TaskRoomForm
 from django.contrib import messages
-from .models import TasksRoom, Task
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.urls import reverse
-from django.shortcuts import HttpResponse
+from django.shortcuts import render, redirect
+from .forms import TaskRoomForm
+from .models import TasksRoom, Task
 
 
-# Create your views here.
 @login_required
 def home(request):
     context = {}
@@ -49,4 +47,24 @@ def home(request):
 
 
 def room(request, hash):
-    return HttpResponse("Romm id: " + str(hash))
+    context = {
+        "hash": hash,
+    }
+
+    if request.method == "POST":
+        print(request.POST)
+
+    # Get the room title
+    room = TasksRoom.objects.get(id_room=hash)
+    context["room_title"] = room.title
+
+    tasks = Task.objects.filter(room=hash)
+    for task in tasks:
+        if task.current_state == "TODO":
+            context["todo_tasks"] = task
+        elif task.current_state == "INPROG":
+            context["inprogress_tasks"] = task
+        else:
+            context["done"] = task
+
+    return render(request, "tasksroom.html", context=context)

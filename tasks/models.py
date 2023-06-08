@@ -22,9 +22,9 @@ class Task(models.Model):
     )
 
     CURRENT_STATE = (
-        ("PEND", "Pending"),
-        ("RUNN", "In Progress"),
-        ("COMP", "Completed"),
+        ("TODO", "TO-DO"),
+        ("INPROG", "In Progress"),
+        ("DONE", "Done"),
     )
 
     title = models.CharField(blank=False, max_length=255)
@@ -34,7 +34,7 @@ class Task(models.Model):
         choices=IMPORTANCE_CHOICES, default="", blank=True, max_length=10
     )
     current_state = models.CharField(
-        choices=CURRENT_STATE, default="PEND", blank=True, max_length=10
+        choices=CURRENT_STATE, default="TODO", blank=True, max_length=10
     )
 
     def __str__(self):
