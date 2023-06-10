@@ -55,7 +55,7 @@
                 <input type="text" name="title" class="form-control" id="title" required>
                 
                 <label for="desc" class="form-label">Description</label>
-                <textarea name="description" class="form-control" id="desc" cols="80" rows="5"></textarea>
+                <textarea name="description" class="form-control" id="desc" cols="80" rows="5" style="resize:none;"></textarea>
 
                 <label for="importance" class="form-label">Importance</label>
                 <select name="importance" class="form-select" id="importance">
@@ -80,29 +80,57 @@
       
       <div class="row align-items-start text-center text-light">
         <!-- TO-DO TITLE  -->
-        <div class="col me-4 bg-secondary rounded-1">
+        <div class="col me-4 bg-secondary rounded-1" style="padding:10px;">
           TO-DO
-
+          
           <!-- TO-DO TASKS -->
-          <div class="w-auto">
+          <div class="w-auto mt-4">
+
+            {% for task in todo_tasks %}
+            <div class="card flex-fill mb-2 shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title">{{task.title}}</h5>
+                <p class="card-text">{{task.description|default:"ㅤ"}}</p>
+              </div>
+            </div>
+          {% endfor %}
             
           </div>
         </div>
         <!-- DOING TITLE -->
-        <div class="col me-4 bg-secondary rounded-1">
+        <div class="col me-4 bg-secondary rounded-1" style="padding:10px;">
           In Progress
           <!-- DOING TASKS -->
           <div class="w-auto">
+
+            {% for task in inprogress_tasks %}
+              <div class="card flex-fill me-1 mb-1" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">{{task.title}}</h5>
+                  <p class="card-text">{{task.description|default:"ㅤ"}}</p>
+                </div>
+              </div>
+            {% endfor %}
+            
             
           </div>
         </div>
         <!-- DONE TITLE -->
-        <div class="col bg-secondary rounded-1">
+        <div class="col bg-secondary rounded-1" style="padding:10px;">
           Done
 
           <!-- DONE TASKS -->
           <div class="w-auto">
             
+            {% for task in done %}
+              <div class="card flex-fill me-1 mb-1" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">{{task.title}}</h5>
+                  <p class="card-text">{{task.description|default:"ㅤ"}}</p>
+                </div>
+              </div>
+            {% endfor %}
+
           </div>
         </div>
       </div>

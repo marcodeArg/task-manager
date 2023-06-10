@@ -13,6 +13,8 @@ def home(request):
 
     formRoom = TaskRoomForm()
 
+    # TENGO QUE VERIFICAR SI UN USUARIO PUEDE ENTRAR MAS DE UNA VEZ A LA MISMA SALA
+
     if request.method == "POST":
         # Button CREATE
         if "create" in request.POST:
@@ -32,6 +34,8 @@ def home(request):
         else:
             room_hash = request.POST["room_hash"]
             if TasksRoom.objects.filter(id_room=room_hash).exists():
+                # ACAAA
+
                 room = TasksRoom.objects.get(id_room=room_hash)
                 room.users.add(request.user)
                 messages.success(request, "You entered the room successfully!")
@@ -51,20 +55,36 @@ def room(request, hash):
         "hash": hash,
     }
 
+    # Current room
+    current_room = TasksRoom.objects.get(id_room=hash)
+
     if request.method == "POST":
-        print(request.POST)
+        title = request.POST["title"]
+        description = request.POST["description"]
+        importance = request.POST["importance"]
+        room = current_room
+
+        # Create task
+        t = Task.objects.create(
+            title=title, description=description, room=room, importance=importance
+        )
+        messages.success(request, "Task created successfully")
 
     # Get the room title
-    room = TasksRoom.objects.get(id_room=hash)
-    context["room_title"] = room.title
+    context["room_title"] = current_room.title
+
+    # Stablish empty lists for iterate over all the tasks, otherwise will save only one task
+    context["todo_tasks"] = []
+    context["inprogress_tasks"] = []
+    context["done_tasks"] = []
 
     tasks = Task.objects.filter(room=hash)
-    for task in tasks:
-        if task.current_state == "TODO":
-            context["todo_tasks"] = task
-        elif task.current_state == "INPROG":
-            context["inprogress_tasks"] = task
+    for current_task in tasks:
+        if current_task.current_state == "TODO":
+            context["todo_tasks"].append(current_task)
+        elif current_task.current_state == "INPROG":
+            context["inprogress_tasks"].append(current_task)
         else:
-            context["done"] = task
+            context["done_tasks"].append(current_task)
 
     return render(request, "tasksroom.html", context=context)
