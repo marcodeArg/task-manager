@@ -81,35 +81,60 @@
       <div class="row align-items-start text-center text-light">
         <!-- TO-DO TITLE  -->
         <div class="col me-4 bg-secondary rounded-1" style="padding:10px;">
-          TO-DO
+          <h3 class="display-6">TO-DO</h3>
+          
           
           <!-- TO-DO TASKS -->
           <div class="w-auto mt-4">
 
             {% for task in todo_tasks %}
-            <div class="card flex-fill mb-2 shadow-sm">
-              <div class="card-body">
-                <h5 class="card-title">{{task.title}}</h5>
-                <p class="card-text">{{task.description|default:"ㅤ"}}</p>
+              <button type="button" class="card flex-fill mb-2 shadow-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-{{ task.id }}">
+                  <div class="card-body">
+                    <h5 class="card-title">{{task.title}}</h5>
+                    <p class="card-text">{{task.description|default:"ㅤ"}}</p>
+                  </div>
+              </button>
+
+
+              <div class="modal fade" id="modal-{{ task.id }}" tabindex="-1" aria-labelledby="modal-{{ task.id }}-label" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="modal-{{ task.id }}-label">Modal title</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="{% url 'room' hash %}" method="POST">
+                          {% csrf_token %}
+                          {{ current_task }}
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          {% endfor %}
+
+            {% endfor %}
             
           </div>
         </div>
         <!-- DOING TITLE -->
         <div class="col me-4 bg-secondary rounded-1" style="padding:10px;">
-          In Progress
+          <h3 class="display-6">In Progress</h3>
+          
           <!-- DOING TASKS -->
           <div class="w-auto">
 
             {% for task in inprogress_tasks %}
-              <div class="card flex-fill me-1 mb-1" style="width: 18rem;">
+              <button type="button" class="card flex-fill mb-2 shadow-sm w-100">
                 <div class="card-body">
                   <h5 class="card-title">{{task.title}}</h5>
                   <p class="card-text">{{task.description|default:"ㅤ"}}</p>
                 </div>
-              </div>
+              </button>
             {% endfor %}
             
             
@@ -117,18 +142,18 @@
         </div>
         <!-- DONE TITLE -->
         <div class="col bg-secondary rounded-1" style="padding:10px;">
-          Done
+          <h3 class="display-6">Done</h3>
 
           <!-- DONE TASKS -->
           <div class="w-auto">
             
             {% for task in done %}
-              <div class="card flex-fill me-1 mb-1" style="width: 18rem;">
+              <button type="button" class="card flex-fill mb-2 shadow-sm w-100">
                 <div class="card-body">
                   <h5 class="card-title">{{task.title}}</h5>
                   <p class="card-text">{{task.description|default:"ㅤ"}}</p>
                 </div>
-              </div>
+              </button>
             {% endfor %}
 
           </div>
