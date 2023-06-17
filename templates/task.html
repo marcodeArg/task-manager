@@ -1,0 +1,51 @@
+<button type="button" class="card flex-fill mb-2 shadow-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-{{ task.id }}">
+  <div class="card-body">
+    <h5 class="card-title">{{task.title}}</h5>
+    <p class="card-text">{{task.description|default:"ㅤ"}}</p>
+  </div>
+</button>
+
+
+<div class="modal fade" id="modal-{{ task.id }}" tabindex="-1" aria-labelledby="modal-{{ task.id }}-label" aria-hidden="true">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h1 class="modal-title fs-5" id="modal-{{ task.id }}-label">Modal title</h1>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <form action="{% url 'update' hash task.id %}" method="POST">
+          {% csrf_token %}
+          <label for="room" class="form-label">Title</label>
+          <input type="text" name="title" class="form-control" id="title" value="{{ task.title }}" required>
+                
+          <label for="desc" class="form-label">Description</label>
+          <textarea name="description" class="form-control" id="desc" cols="80" rows="5" style="resize:none;">{{ task.description }}</textarea>
+
+          <label for="importance" class="form-label">Importance</label>
+          <select name="importance" class="form-select" id="importance">
+            <option {% if task.importance == "" %} selected {% endif %}></option>
+            <option {% if task.importance == 'HIG' %} selected {% endif %} value="HIG">High</option>
+            <option {% if task.importance == 'MED' %} selected {% endif %} value="MED">Medium</option>
+            <option {% if task.importance == 'LOW' %} selected {% endif %} value="LOW">Low</option>
+          </select>
+
+          <label for="current_state" class="form-label">Current state</label>
+          <select name="current_state" class="form-select" id="current_state">
+            <option {% if task.current_state == 'TODO' %} selected {% endif %} value="TODO">TODO</option>
+            <option {% if task.current_state == 'INPROG' %} selected {% endif %} value="INPROG">In Progress</option>
+            <option {% if task.current_state == 'DONE' %} selected {% endif %} value="DONE">Done</option>    
+          </select>
+
+          <div class="modal-footer">
+            <input type="submit" class="btn btn-primary" value="Save changes">
+            <button type="button" class="btn btn-secondary"><a href="{ url 'delete' task.id }">Delete</a></button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+
+      </form>
+    </div>
+    
+  </div>
+</div>
+</div>

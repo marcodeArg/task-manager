@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.shortcuts import render, redirect
-from .forms import TaskRoomForm, EditTask
+from .forms import TaskRoomForm
 from .models import TasksRoom, Task
 
 
@@ -88,4 +88,16 @@ def room(request, hash):
         else:
             context["done_tasks"].append(current_task)
 
+        print(context["todo_tasks"])
+        print(context["todo_tasks"][::-1])
+
     return render(request, "tasksroom.html", context=context)
+
+
+def update(request, hash, task_id):
+    if request.method == "POST":
+        task = Task.objects.get(id=task_id)
+
+
+def delete(request, task_id):
+    pass
