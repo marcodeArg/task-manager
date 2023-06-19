@@ -96,8 +96,37 @@ def room(request, hash):
 
 def update(request, hash, task_id):
     if request.method == "POST":
-        task = Task.objects.get(id=task_id)
+        # Get current room
+        room = TasksRoom.objects.get(id_room=hash)
+
+        # Check if the task exists
+        if Task.objects.filter(id=task_id).exists():
+            # Check if the task is in the room
+            if room.task_set.filter(id=task_id).exists():
+                task = room.task_set.filter(id=task_id)
+                task.title = request.POST["title"]
+                task.description = request.POST["description"]
+                task.importance = request.POST["importance"]
+                task.current_state = request.POST["current_state"]
+                task.save()
+
+                messages.success(request, "Task updated")
+
+    redirect_url = reverse("room", kwargs={"hash": hash})
+    return redirect(redirect_url)
 
 
 def delete(request, task_id):
-    pass
+    if request.method == "POST":
+        # Get current room
+        room = TasksRoom.objects.get(id_room=hash)
+
+        # Check if the task exists
+        if Task.objects.filter(id=task_id).exists():
+            # Check if the task is in the room
+            if room.task_set.filter(id=task_id).exists():
+                Task.objects.filter(id=task_id).delete()
+                messages.success(request, "Task deleted!")
+
+    redirect_url = reverse("room", kwargs={"hash": hash})
+    return redirect(redirect_url)
