@@ -51,6 +51,7 @@ def home(request):
     return render(request, "home.html", context)
 
 
+@login_required
 def room(request, hash):
     context = {
         "hash": hash,
@@ -58,6 +59,7 @@ def room(request, hash):
 
     # Current room
     current_room = TasksRoom.objects.get(id_room=hash)
+    context["users"] = current_room.users.all()
 
     if request.method == "POST":
         title = request.POST["title"]
@@ -88,12 +90,21 @@ def room(request, hash):
         else:
             context["done_tasks"].append(current_task)
 
-        print(context["todo_tasks"])
-        print(context["todo_tasks"][::-1])
-
     return render(request, "tasksroom.html", context=context)
 
 
+@login_required
+def leave(request, hash):
+    room = TasksRoom.objects.get(id_room=hash)
+
+    if room.users.filter(id=request.user.id).exists():
+        room.users.remove(request.user)
+        messages.success(request, "You have successfully left the room")
+
+    return redirect("home")
+
+
+@login_required
 def update(request, hash, task_id):
     if request.method == "POST":
         # Get current room
@@ -103,7 +114,7 @@ def update(request, hash, task_id):
         if Task.objects.filter(id=task_id).exists():
             # Check if the task is in the room
             if room.task_set.filter(id=task_id).exists():
-                task = room.task_set.filter(id=task_id)
+                task = room.task_set.get(id=task_id)
                 task.title = request.POST["title"]
                 task.description = request.POST["description"]
                 task.importance = request.POST["importance"]
@@ -116,17 +127,17 @@ def update(request, hash, task_id):
     return redirect(redirect_url)
 
 
-def delete(request, task_id):
-    if request.method == "POST":
-        # Get current room
-        room = TasksRoom.objects.get(id_room=hash)
+@login_required
+def delete(request, hash, task_id):
+    # Get current room
+    room = TasksRoom.objects.get(id_room=hash)
 
-        # Check if the task exists
-        if Task.objects.filter(id=task_id).exists():
-            # Check if the task is in the room
-            if room.task_set.filter(id=task_id).exists():
-                Task.objects.filter(id=task_id).delete()
-                messages.success(request, "Task deleted!")
+    # Check if the task exists
+    if Task.objects.filter(id=task_id).exists():
+        # Check if the task is in the room
+        if room.task_set.filter(id=task_id).exists():
+            Task.objects.filter(id=task_id).delete()
+            messages.success(request, "Task deleted!")
 
     redirect_url = reverse("room", kwargs={"hash": hash})
     return redirect(redirect_url)

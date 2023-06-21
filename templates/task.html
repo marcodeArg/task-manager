@@ -1,5 +1,5 @@
-<button type="button" class="card flex-fill mb-2 shadow-sm w-100" data-bs-toggle="modal" data-bs-target="#modal-{{ task.id }}">
-  <div class="card-body">
+<button type="button" class="card flex-fill mb-2 shadow-sm w-100 {% if task.importance == 'HIG' %}  bg-danger-subtle {% elif task.importance == 'MED' %}  bg-warning-subtle {% elif task.importance == 'LOW' %} bg-success-subtle {% else %} text-bg-light {% endif %}" data-bs-toggle="modal" data-bs-target="#modal-{{ task.id }}">
+  <div class="card-body text-start">
     <h5 class="card-title">{{task.title}}</h5>
     <p class="card-text">{{task.description|default:"ㅤ"}}</p>
   </div>
@@ -10,17 +10,16 @@
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
-      <h1 class="modal-title fs-5" id="modal-{{ task.id }}-label">Modal title</h1>
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     <div class="modal-body">
       <form action="{% url 'update' hash task.id %}" method="POST">
           {% csrf_token %}
           <label for="room" class="form-label">Title</label>
-          <input type="text" name="title" class="form-control" id="title" value="{{ task.title }}" required>
+          <input type="text" name="title" class="form-control" id="title" value="{{ task.title }}" maxlength=255 required>
                 
           <label for="desc" class="form-label">Description</label>
-          <textarea name="description" class="form-control" id="desc" cols="80" rows="5" style="resize:none;">{{ task.description }}</textarea>
+          <textarea name="description" class="form-control" id="desc" cols="80" rows="5" style="resize:none;" maxlength=500>{{ task.description }}</textarea>
 
           <label for="importance" class="form-label">Importance</label>
           <select name="importance" class="form-select" id="importance">
@@ -39,7 +38,7 @@
 
           <div class="modal-footer">
             <input type="submit" class="btn btn-primary" value="Save changes">
-            <a class="btn btn-danger" role="button" href="{ url 'delete' task.id }">Delete</a>
+            <a class="btn btn-danger" role="button" href="{% url 'delete' hash task.id %}">Delete</a>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           </div>
 

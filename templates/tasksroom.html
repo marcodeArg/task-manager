@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+
+{% block title %}{{ room_title }} Room{% endblock  %}
+  
+
 {% block content %}
   <div class="container mt-5">
     <div class="row align-items-center mb-3">
@@ -14,6 +18,8 @@
         <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#create_task">
           Create Task
         </button>
+
+        <a href="{% url 'leave' hash %}" class="btn btn-danger ms-2">Leave Room</a>
       </div>
   
       <!-- MODAL USERS -->
@@ -27,7 +33,7 @@
             <div class="modal-body">
   
               {% for user in users %}
-                {{ user }}
+                <p>{{ user }}</p>
               {% endfor %}
   
             </div>
@@ -52,10 +58,10 @@
               <form action="{% url 'room' hash %}" method="POST">
                 {% csrf_token %}
                 <label for="room" class="form-label">Title</label>
-                <input type="text" name="title" class="form-control" id="title" required>
+                <input type="text" name="title" class="form-control" id="title" maxlength=255 required>
                 
                 <label for="desc" class="form-label">Description</label>
-                <textarea name="description" class="form-control" id="desc" cols="80" rows="5" style="resize:none;"></textarea>
+                <textarea name="description" class="form-control" id="desc" cols="80" rows="5" style="resize:none;" maxlength=500></textarea>
 
                 <label for="importance" class="form-label">Importance</label>
                 <select name="importance" class="form-select" id="importance">
@@ -66,7 +72,7 @@
                 </select>
   
                 <div class="modal-footer">
-                  <input type="submit" class="btn btn-primary">
+                  <input type="submit" class="btn btn-primary" value="Create">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
               </form>
@@ -98,15 +104,10 @@
           <h3 class="display-6">In Progress</h3>
           
           <!-- DOING TASKS -->
-          <div class="w-auto">
+          <div class="w-auto mt-4">
 
             {% for task in inprogress_tasks %}
-              <button type="button" class="card flex-fill mb-2 shadow-sm w-100">
-                <div class="card-body">
-                  <h5 class="card-title">{{task.title}}</h5>
-                  <p class="card-text">{{task.description|default:"ㅤ"}}</p>
-                </div>
-              </button>
+              {% include 'task.html' %}
             {% endfor %}
             
             
@@ -117,15 +118,10 @@
           <h3 class="display-6">Done</h3>
 
           <!-- DONE TASKS -->
-          <div class="w-auto">
+          <div class="w-auto mt-4">
             
-            {% for task in done %}
-              <button type="button" class="card flex-fill mb-2 shadow-sm w-100">
-                <div class="card-body">
-                  <h5 class="card-title">{{task.title}}</h5>
-                  <p class="card-text">{{task.description|default:"ㅤ"}}</p>
-                </div>
-              </button>
+            {% for task in done_tasks %}
+              {% include 'task.html' %}
             {% endfor %}
 
           </div>
