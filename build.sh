@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
-# FALTA EL BUILD Y REQUIREMENTS
-# TAMBIEN PODRIA VER DE BORRAR DECOUPLE-PYTHON
+pip install requirements.txt
+
+python manage.py migrate
+
