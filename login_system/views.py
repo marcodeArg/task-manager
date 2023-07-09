@@ -36,12 +36,8 @@ def signin(request):
 
     if request.method == "POST":
         form = SignInForm(request.POST)
-        print(request.POST)
-        print()
-        print(form)
-        if form.is_valid():
-            print(form.cleaned_data)
 
+        if form.is_valid():
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password1"]
 
