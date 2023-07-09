@@ -1,5 +1,5 @@
 from django import forms
-from .models import TasksRoom, Task
+from .models import TasksRoom
 
 
 class TaskRoomForm(forms.ModelForm):
@@ -15,8 +15,7 @@ class TaskRoomForm(forms.ModelForm):
             "rows": 5,
             "style": "resize:none;",
         }
+        self.fields["description"].widget.attrs = new_data
 
         for field in self.fields:
             self.fields[str(field)].widget.attrs["class"] = "form-control"
-
-        self.fields["description"].widget.attrs = new_data
